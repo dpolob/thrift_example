@@ -1,3 +1,5 @@
+# Script para el cliente
+
 import sys
 sys.path.append('gen-py')
 from hello import HelloSrv
