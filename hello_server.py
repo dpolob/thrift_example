@@ -8,9 +8,9 @@ from thrift.protocol import TBinaryProtocol
 from thrift.server import TServer
 
 class HelloHandler:
-    def hello_fun(self):
+    def hello_fun(self, numero):
         print("[SERVER] Handling client request")
-        return "Hello from server"
+        return "Hello from server {}".format(numero)
 
 handler = HelloHandler()
 proc = HelloSrv.Processor(handler)

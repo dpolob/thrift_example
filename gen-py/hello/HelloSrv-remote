@@ -24,7 +24,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('  string hello_fun()')
+    print('  string hello_fun(double numero)')
     print('')
     sys.exit(0)
 
@@ -105,10 +105,10 @@ client = HelloSrv.Client(protocol)
 transport.open()
 
 if cmd == 'hello_fun':
-    if len(args) != 0:
-        print('hello_fun requires 0 args')
+    if len(args) != 1:
+        print('hello_fun requires 1 args')
         sys.exit(1)
-    pp.pprint(client.hello_fun())
+    pp.pprint(client.hello_fun(eval(args[0]),))
 
 else:
     print('Unrecognized method %s' % cmd)

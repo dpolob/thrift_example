@@ -19,7 +19,12 @@ all_structs = []
 
 
 class Iface(object):
-    def hello_fun(self):
+    def hello_fun(self, numero):
+        """
+        Parameters:
+         - numero
+
+        """
         pass
 
 
@@ -30,13 +35,19 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def hello_fun(self):
-        self.send_hello_fun()
+    def hello_fun(self, numero):
+        """
+        Parameters:
+         - numero
+
+        """
+        self.send_hello_fun(numero)
         return self.recv_hello_fun()
 
-    def send_hello_fun(self):
+    def send_hello_fun(self, numero):
         self._oprot.writeMessageBegin('hello_fun', TMessageType.CALL, self._seqid)
         args = hello_fun_args()
+        args.numero = numero
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
@@ -90,7 +101,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = hello_fun_result()
         try:
-            result.success = self._handler.hello_fun()
+            result.success = self._handler.hello_fun(args.numero)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -111,7 +122,15 @@ class Processor(Iface, TProcessor):
 
 
 class hello_fun_args(object):
+    """
+    Attributes:
+     - numero
 
+    """
+
+
+    def __init__(self, numero=None,):
+        self.numero = numero
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -122,6 +141,11 @@ class hello_fun_args(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 1:
+                if ftype == TType.DOUBLE:
+                    self.numero = iprot.readDouble()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -132,6 +156,10 @@ class hello_fun_args(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('hello_fun_args')
+        if self.numero is not None:
+            oprot.writeFieldBegin('numero', TType.DOUBLE, 1)
+            oprot.writeDouble(self.numero)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -150,6 +178,8 @@ class hello_fun_args(object):
         return not (self == other)
 all_structs.append(hello_fun_args)
 hello_fun_args.thrift_spec = (
+    None,  # 0
+    (1, TType.DOUBLE, 'numero', None, None, ),  # 1
 )
 
 

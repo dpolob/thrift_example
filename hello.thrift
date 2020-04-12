@@ -1,3 +1,3 @@
 service HelloSrv{
-    string hello_fun()
+    string hello_fun(1: double numero)
 }
